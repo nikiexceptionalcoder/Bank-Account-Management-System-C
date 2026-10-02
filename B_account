@@ -1,0 +1,142 @@
+#include <stdio.h>
+#include <stdlib.h>
+struct accountdetails
+{
+int actno;
+int i,tno;
+char name[25];
+char phoneno[12];
+int age;
+char emis[30];
+char ch;
+char pan[12];
+char tdate[20];
+char description[40];
+long new_balance;
+struct address
+{
+char dno[5];
+char street[40];
+char city[35];
+long pincode;
+}a;
+long deposit;
+long withdrawal;
+long balance;
+char statementdate[20];
+}s;
+int main()
+{
+int opt,i,tno;
+FILE *fH; 
+printf("\nEnter your name:");
+scanf(" %[^\n]",s.name);
+printf("\nEnter your age:");
+scanf("%d",&s.age);
+if(s.age<18)
+{
+printf("\nFor legal verifications, kindly provide us your identity details.........");
+printf("\nEnter your EMIS number:");
+scanf("%s",s.emis);
+}
+else
+{
+printf("\nDo you have a PAN card?...(y/n)");
+scanf(" %c",&s.ch);
+if(s.ch=='y')
+{
+printf("\nEnter your permanent account number(must be a 10 digit alphanumeric):");
+scanf("%s",s.pan);
+}
+}
+printf("\nEnter your phoneno:");
+scanf("%s",s.phoneno);
+printf("\nEnter your doorno:");
+scanf(" %[^\n]",s.a.dno);
+printf("\nEnter your street name:");
+scanf(" %[^\n]",s.a.street);
+printf("\nEnter your city name:");
+scanf("%s",s.a.city);
+printf("\nEnter your city's pincode:");
+scanf("%ld",&s.a.pincode);
+printf("\nEnter your deposit:");
+scanf("%ld",&s.deposit);
+s.new_balance=s.deposit;
+do
+{
+printf("\n\tBANK ACCOUNT MANAGEMENT");
+printf("\n1.Account creation\n2.Account Monitoring\n3.Commit");
+printf("\nChoose an option:");
+scanf("%d",&opt);
+switch(opt)
+{
+case 1:
+fH=fopen("Bank_Account.txt","w");
+if(fH==NULL)
+{
+printf("\nerror in opening file");
+break;
+}
+printf("\nGENERATING ACCOUNT NUMBER....kindly wait for few seconds.....");
+fprintf(fH,"\nAccount Number:%d",rand());
+fprintf(fH,"\nDeposit:%ld",s.deposit);
+fprintf(fH,"\nBalance after creation:");
+printf("\nLOADING..............................");
+fprintf(fH,"\n₹%ld",s.new_balance);
+printf("\nVerifying Account Status.....");
+fprintf(fH,"\nAccount Type:SAVINGS");
+fprintf(fH,"\nAccount Status:Open");
+printf("\nThe validation period is for 1 year from the opening of your account");
+printf("\nSuccessfull creation of bank account!!!!");
+fclose(fH);
+break;
+case 2:
+fH=fopen("Bank_Account.txt","a");
+if(fH==NULL)
+{
+printf("\nerror in opening file");
+break;
+}
+printf("\nEnter the statement issued date:");
+scanf("%s",s.statementdate);
+fputs("\n\t~~~Bank Statement~~~",fH); 
+fputs("\n...........................",fH); 
+fputs("\nBank Name:@ Bank",fH); 
+fprintf(fH,"\nStatement Date:%s",s.statementdate);
+fprintf(fH,"\nAccount Number:%d",rand());
+fprintf(fH,"\nName:%s",s.name);
+fprintf(fH,"\nAge:%d",s.age);
+fprintf(fH,"\nPermanent Account Number:%s",s.pan);
+fprintf(fH,"\nEducational Management Information System number:%s",s.emis);
+fprintf(fH,"\nPhone No.:%s",s.phoneno);
+fprintf(fH,"\nAddress:%s\n%s\n%s-%ld",s.a.dno,s.a.street,s.a.city,s.a.pincode);
+fprintf(fH,"\n\tTransaction History");
+fprintf(fH,"\nT_date |\tDescription |\tWithdrawals |\tDeposits |\tBalance");
+fprintf(fH,"\n__________________________________________________________________________");
+printf("\nENTER your number of transactions:");
+scanf("%d",&tno);
+for(i=0;i<tno;i++)
+{
+printf("\nEnter your transaction date:");
+scanf("%s",s.tdate);
+printf("\nEnter the description details:");
+scanf(" %[^\n]",s.description);
+printf("\nAmount withdrawing:");
+scanf("%ld",&s.withdrawal);
+printf("\nHow much are you going to deposit:");
+scanf("%ld",&s.deposit);
+s.new_balance+=s.deposit-s.withdrawal;
+fprintf(fH,"\n%s | \t%s | \t%ld | \t%ld | \t%ld",s.tdate,s.description,s.withdrawal,s.deposit,s.new_balance);
+}
+fprintf(fH,"\nTotal Balance amount:₹%ld",s.new_balance);
+fclose(fH); 
+printf("\nRecords Stored successfully");
+break;
+case 3:
+break;
+default:
+printf("\nInvalid option......try again");
+}
+}while(opt!=3);
+return 0;
+}
